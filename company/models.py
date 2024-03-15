@@ -38,6 +38,9 @@ class Company(models.Model):
     social_media2 = models.URLField(null=True, blank=True)
     social_media3 = models.URLField(null=True, blank=True)
 
+    class Meta:
+        verbose_name_plural = 'companies'
+
 
 class Product(models.Model):
     name = models.CharField(max_length=128)
