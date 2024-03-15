@@ -1,5 +1,6 @@
 from django.contrib import admin
-from models import Company, Product
+
+from company.models import Company, Product
 
 
 class CompanyAdminList(admin.ModelAdmin):
