@@ -12,5 +12,6 @@ def test_company_list_api(
     url = reverse('companies')
     response = client.get(url)
     # then expecting empty list and status 200
+    print(response.content.decode('utf-8'))
     assert response.status_code == 200
-    assert response.data == []
+    assert response.data['results'] == []
