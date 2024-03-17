@@ -30,7 +30,6 @@ class CompanyFactory(factory.django.DjangoModelFactory):
     description = fake.sentence()
     schedule_start = fake.time()
     schedule_end = fake.time()
-    # schedule_weekdays = fake.schedule_weekdays_enum()
     phone_number = fake.kg_phone_number()
     email = fake.email()
     map_link = fake.uri()

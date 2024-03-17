@@ -38,3 +38,32 @@ def company_create_data_dict() -> dict:
         'social_media3': None
     }
     return company
+
+
+@pytest.fixture
+def create_num_of_products_from_factory(db):
+    def make_products(num: int) -> list:
+        return ProductFactory.create_batch(size=num)
+    return make_products
+
+
+@pytest.fixture
+def create_company_from_factory_with_products(db):
+    def make_company_with_products(num_products: int = 5):
+        company = CompanyFactory.create()
+        products = ProductFactory.create_batch(size=num_products, company=company)
+        return products
+    return make_company_with_products
+
+
+@pytest.fixture
+def product_create_data_dict() -> dict:
+    result = {
+        'name': 'Random Name',
+        'description': 'Random Description',
+        'price': '555.55',
+        'discount': 0,
+        'quantity': 100,
+        'company': None,
+    }
+    return result

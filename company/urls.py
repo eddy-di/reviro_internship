@@ -19,17 +19,17 @@ urlpatterns = [
         name='companies'
     ),
     path(
-        'companies/<int:pk>',
+        'companies/<int:company_id>',
         CompanyRetrieveUpdateDestroyView.as_view(),
         name='company_details'
     ),
     path(
-        'products',
+        'companies/<int:company_id>/products',
         ProductListCreateView.as_view(),
         name='products'
     ),
     path(
-        'products/<int:pk>',
+        'companies/<int:company_id>/products/<int:product_id>',
         ProductRetrieveUpdateDestroyView.as_view(),
         name='product_details'
     ),

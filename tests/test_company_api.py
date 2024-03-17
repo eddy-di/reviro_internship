@@ -69,7 +69,12 @@ def test_get_company_specific_api(
     # given an unauthed client
     client = api_client
     # when client is trying to access empty db
-    url = reverse('company_details', args=[1])
+    url = reverse(
+        'company_details',
+        kwargs={
+            'company_id': 1
+        }
+    )
     response = client.get(url)
     # then expecting to get 404 and not fund message
     assert response.status_code == 404
@@ -85,7 +90,12 @@ def test_get_company_specific_api(
     client = api_client
     company = create_num_of_companies_from_factories_without_products(1)[0]
     # when accessing one of them with their id
-    url = reverse('company_details', args=[company.id])
+    url = reverse(
+        'company_details',
+        kwargs={
+            'company_id': company.id
+        }
+    )
     response = client.get(url)
     # then expecting to get data of available company
     assert response.status_code == 200
@@ -116,7 +126,12 @@ def test_patch_company_specific_api(
         'schedule_start': '08:00:00',
         'schedule_end': '00:00:00'
     }
-    url = reverse('company_details', args=[company.id])
+    url = reverse(
+        'company_details',
+        kwargs={
+            'company_id': company.id
+        }
+    )
     response = client.patch(
         url,
         data=json.dumps(patch_data),
@@ -141,7 +156,12 @@ def test_put_company_specific_api(
     company = create_num_of_companies_from_factories_without_products(1)[0]
     capito_put_data = company_create_data_dict
     # when client is willing to put existing company details with other company details
-    url = reverse('company_details', args=[company.id])
+    url = reverse(
+        'company_details',
+        kwargs={
+            'company_id': company.id
+        }
+    )
     response = client.put(
         url,
         data=json.dumps(capito_put_data),
@@ -169,7 +189,12 @@ def test_delete_company_specific_api(
     client = api_client
     company = create_num_of_companies_from_factories_without_products(1)[0]
     # when trying to delete existing company
-    url = reverse('company_details', args=[company.id])
+    url = reverse(
+        'company_details',
+        kwargs={
+            'company_id': company.id
+        }
+    )
     response = client.delete(url)
     # then expecting status code 204 and None/null in response
     assert response.status_code == 204
