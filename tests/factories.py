@@ -1,6 +1,7 @@
 import factory
 from faker import Faker
 from faker.providers import BaseProvider
+from faker.providers.phone_number import Provider
 
 from company.models import Company, Product
 
@@ -12,7 +13,13 @@ class CompanyProvider(BaseProvider):
         return self.random_element(Company.Weekdays.values)
 
 
+class KyrgyzstanPhoneProvider(Provider):
+    def kg_phone_number(self):
+        return f'+996{self.msisdn()[4:]}'
+
+
 fake.add_provider(CompanyProvider)
+fake.add_provider(KyrgyzstanPhoneProvider)
 
 
 class CompanyFactory(factory.django.DjangoModelFactory):
@@ -24,7 +31,7 @@ class CompanyFactory(factory.django.DjangoModelFactory):
     schedule_start = fake.time()
     schedule_end = fake.time()
     # schedule_weekdays = fake.schedule_weekdays_enum()
-    phone_number = fake.phone_number()
+    phone_number = fake.kg_phone_number()
     email = fake.email()
     map_link = fake.uri()
     social_media1 = fake.url()
