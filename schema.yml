@@ -7,26 +7,36 @@ info:
 paths:
   /api/companies:
     get:
-      operationId: companies_list
+      operationId: company_list
+      description: Allows to `GET` a list of all companies in database, paginated
+        to 10 instances per page.
+      summary: Gets all companies.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
       tags:
-      - companies
+      - Companies
       security:
-      - cookieAuth: []
       - basicAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Company'
+                $ref: '#/components/schemas/PaginatedCompanyList'
           description: ''
     post:
-      operationId: companies_create
+      operationId: company_create
+      description: Allows to `POST` a new company.
+      summary: Creates new company.
       tags:
-      - companies
+      - Companies
       requestBody:
         content:
           application/json:
@@ -40,8 +50,8 @@ paths:
               $ref: '#/components/schemas/Company'
         required: true
       security:
-      - cookieAuth: []
       - basicAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '201':
@@ -50,20 +60,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/Company'
           description: ''
-  /api/companies/{id}:
+  /api/companies/{company_id}:
     get:
-      operationId: companies_retrieve
+      operationId: company_retrieve
+      description: Allows to `GET` a company from database.
+      summary: Gets company.
       parameters:
       - in: path
-        name: id
+        name: company_id
         schema:
           type: integer
         required: true
       tags:
-      - companies
+      - Companies
       security:
-      - cookieAuth: []
       - basicAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '200':
@@ -73,15 +85,17 @@ paths:
                 $ref: '#/components/schemas/Company'
           description: ''
     put:
-      operationId: companies_update
+      operationId: company_update
+      description: Allows to `PUT` a company.
+      summary: Updates company.
       parameters:
       - in: path
-        name: id
+        name: company_id
         schema:
           type: integer
         required: true
       tags:
-      - companies
+      - Companies
       requestBody:
         content:
           application/json:
@@ -95,8 +109,8 @@ paths:
               $ref: '#/components/schemas/Company'
         required: true
       security:
-      - cookieAuth: []
       - basicAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '200':
@@ -106,15 +120,17 @@ paths:
                 $ref: '#/components/schemas/Company'
           description: ''
     patch:
-      operationId: companies_partial_update
+      operationId: company_partial_update
+      description: Allows to `PATCH` a company.
+      summary: Partially updates company.
       parameters:
       - in: path
-        name: id
+        name: company_id
         schema:
           type: integer
         required: true
       tags:
-      - companies
+      - Companies
       requestBody:
         content:
           application/json:
@@ -127,8 +143,8 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedCompany'
       security:
-      - cookieAuth: []
       - basicAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '200':
@@ -138,44 +154,67 @@ paths:
                 $ref: '#/components/schemas/Company'
           description: ''
     delete:
-      operationId: companies_destroy
+      operationId: company_destroy
+      description: Allows to `DELETE` a company.
+      summary: Deletes company.
       parameters:
       - in: path
-        name: id
+        name: company_id
         schema:
           type: integer
         required: true
       tags:
-      - companies
+      - Companies
       security:
-      - cookieAuth: []
       - basicAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '204':
           description: No response body
-  /api/products:
+  /api/companies/{company_id}/products:
     get:
-      operationId: products_list
+      operationId: companies_products_list
+      description: Allows to `GET` all products related to `company_id` and paginates
+        10 instances per page.
+      summary: Gets all products.
+      parameters:
+      - in: path
+        name: company_id
+        schema:
+          type: integer
+        required: true
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
       tags:
-      - products
+      - Products
       security:
-      - cookieAuth: []
       - basicAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Product'
+                $ref: '#/components/schemas/PaginatedProductList'
           description: ''
     post:
-      operationId: products_create
+      operationId: companies_products_create
+      description: Allows to `POST` a new product.
+      summary: Creates new product.
+      parameters:
+      - in: path
+        name: company_id
+        schema:
+          type: integer
+        required: true
       tags:
-      - products
+      - Products
       requestBody:
         content:
           application/json:
@@ -189,8 +228,8 @@ paths:
               $ref: '#/components/schemas/Product'
         required: true
       security:
-      - cookieAuth: []
       - basicAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '201':
@@ -199,20 +238,27 @@ paths:
               schema:
                 $ref: '#/components/schemas/Product'
           description: ''
-  /api/products/{id}:
+  /api/companies/{company_id}/products/{product_id}:
     get:
-      operationId: products_retrieve
+      operationId: companies_products_retrieve
+      description: Allows to `GET` a product.
+      summary: Gets a product.
       parameters:
       - in: path
-        name: id
+        name: company_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: product_id
         schema:
           type: integer
         required: true
       tags:
-      - products
+      - Products
       security:
-      - cookieAuth: []
       - basicAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '200':
@@ -222,15 +268,22 @@ paths:
                 $ref: '#/components/schemas/Product'
           description: ''
     put:
-      operationId: products_update
+      operationId: companies_products_update
+      description: Allows to `PUT` a product.
+      summary: Updates a product.
       parameters:
       - in: path
-        name: id
+        name: company_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: product_id
         schema:
           type: integer
         required: true
       tags:
-      - products
+      - Products
       requestBody:
         content:
           application/json:
@@ -244,8 +297,8 @@ paths:
               $ref: '#/components/schemas/Product'
         required: true
       security:
-      - cookieAuth: []
       - basicAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '200':
@@ -255,15 +308,22 @@ paths:
                 $ref: '#/components/schemas/Product'
           description: ''
     patch:
-      operationId: products_partial_update
+      operationId: companies_products_partial_update
+      description: Allows to `PATCH` a product.
+      summary: Partially updates product.
       parameters:
       - in: path
-        name: id
+        name: company_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: product_id
         schema:
           type: integer
         required: true
       tags:
-      - products
+      - Products
       requestBody:
         content:
           application/json:
@@ -276,8 +336,8 @@ paths:
             schema:
               $ref: '#/components/schemas/PatchedProduct'
       security:
-      - cookieAuth: []
       - basicAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '200':
@@ -287,18 +347,25 @@ paths:
                 $ref: '#/components/schemas/Product'
           description: ''
     delete:
-      operationId: products_destroy
+      operationId: companies_products_destroy
+      description: Allows to `DELETE` a product.
+      summary: Deletes product.
       parameters:
       - in: path
-        name: id
+        name: company_id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: product_id
         schema:
           type: integer
         required: true
       tags:
-      - products
+      - Products
       security:
-      - cookieAuth: []
       - basicAuth: []
+      - cookieAuth: []
       - {}
       responses:
         '204':
@@ -363,6 +430,46 @@ components:
       - description
       - id
       - name
+    PaginatedCompanyList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+    PaginatedProductList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
     PatchedCompany:
       type: object
       properties:
