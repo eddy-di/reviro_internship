@@ -1,0 +1,41 @@
+services:
+  test_web:
+    build:
+      context: .
+    container_name: test_web
+    volumes:
+      - .:/code
+    networks:
+      - REVIROweb_test
+    ports:
+      - 8080:8000
+    command: sh -c "pytest -v"
+    env_file:
+      - .env.test
+    depends_on:
+      test_database:
+        condition: service_healthy
+
+  test_database:
+    image: postgres:15.1-alpine
+    networks:
+      - REVIROweb_test
+    volumes:
+      - test_postgres_db_data:/var/lib/postgresql/data
+    env_file:
+      - .env.test
+    expose:
+      - 5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d revintdb -U revint"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  REVIROweb_test:
+    name: REVIROweb_test
+
+volumes:
+  test_postgres_db_data:
+    name: test_postgres_db_data
