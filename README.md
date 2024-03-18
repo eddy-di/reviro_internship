@@ -35,7 +35,7 @@ http://127.0.0.1:8000/api/swagger-ui
 ```
 
 Вы увидете такую страницу:
-[](./readme_images/swagger_ui_example.png)
+![](./readme_images/swagger_ui_example.png)
 
 Также доступна версия в redoc:
 
@@ -44,7 +44,7 @@ http://127.0.0.1:8000/api/redoc
 ```
 
 Вы увидете такую страницу:
-[](./readme_images/api_redoc_example.png)
+![](./readme_images/api_redoc_example.png)
 
 5. Для того чтобы отключить поднятый сервер в docker'e находясь в папке где был скопирован проект введите слудющую команду:
 
