@@ -1,0 +1,40 @@
+services:
+  web:
+    build:
+      context: .
+    volumes:
+      - .:/code
+    networks:
+      - REVIROweb
+    ports:
+      - 8000:8000
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - .env.web
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    image: postgres:15.1-alpine
+    networks:
+      - REVIROweb
+    volumes:
+      - postgres_db_data:/var/lib/postgresql/data
+    env_file:
+      - .env.web
+    expose:
+      - 5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d revintdb -U revint"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  REVIROweb:
+    name: REVIROweb
+
+volumes:
+  postgres_db_data:
+    name: postgres_db_data
