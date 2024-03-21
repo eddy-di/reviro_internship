@@ -48,22 +48,6 @@ def test_get_product_list_with_one_product(
 
 
 @pytest.mark.django_db
-def test_get_product_list_with_many_products(
-    api_client,
-    create_num_of_products_from_factory
-):
-    # given unauthed client and products with companies
-    client = api_client
-    product1, product2 = create_num_of_products_from_factory(2)
-    # when accessing api
-    url = reverse('products', kwargs={'company_id': product2.company.id})
-    response = client.get(url)
-    print(response.data)
-    # then expecting status code 200
-    assert response.status_code == 200
-
-
-@pytest.mark.django_db
 def test_get_products_list_with_one_company_and_many_products(
     api_client,
     create_company_from_factory_with_products

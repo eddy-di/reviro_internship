@@ -63,7 +63,7 @@ def test_post_company_create_api(
 
 
 @pytest.mark.django_db
-def test_get_company_specific_api(
+def test_get_company_specific_api_for_non_existent_company(
     api_client
 ):
     # given an unauthed client
@@ -82,7 +82,7 @@ def test_get_company_specific_api(
 
 
 @pytest.mark.django_db
-def test_get_company_specific_api(
+def test_get_company_specific_api_for_existent_company(
     api_client,
     create_num_of_companies_from_factories_without_products
 ):
