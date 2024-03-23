@@ -1,4 +1,5 @@
-from drf_spectacular.utils import extend_schema
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import generics, permissions
 
 from company.models import Company, Product
@@ -9,12 +10,22 @@ class CompanyListCreateView(generics.ListCreateAPIView):
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
     permission_classes = [permissions.AllowAny]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
 
     @extend_schema(
         summary='Gets all companies.',
         description='Allows to `GET` a list of all companies in database, paginated to 10 instances per page.',
         tags=['Companies'],
-        operation_id='company_list'
+        operation_id='company_list',
+        parameters=[
+            OpenApiParameter(
+                name='name',
+                description='Filter icontains by name',
+                required=False,
+                type=str
+            ),
+        ]
     )
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
@@ -80,6 +91,8 @@ class ProductListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     permission_classes = [permissions.AllowAny]
     lookup_url_kwarg = 'company_id'
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['name']
 
     def get_queryset(self):
         company_id = self.kwargs.get(self.lookup_url_kwarg)
@@ -89,7 +102,15 @@ class ProductListCreateView(generics.ListCreateAPIView):
     @extend_schema(
         summary='Gets all products.',
         description='Allows to `GET` all products related to `company_id` and paginates 10 instances per page.',
-        tags=['Products']
+        tags=['Products'],
+        parameters=[
+            OpenApiParameter(
+                name='name',
+                description='Filter icontains by name',
+                required=False,
+                type=str
+            ),
+        ]
     )
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
