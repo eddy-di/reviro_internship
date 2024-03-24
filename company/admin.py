@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from company.models import Company, Product
+from company.models import Company, Product, UserProfile
 
 
 class CompanyAdminList(admin.ModelAdmin):
@@ -32,8 +32,17 @@ class ProductAdminList(admin.ModelAdmin):
     ]
 
 
+class UserProfileAdminList(admin.ModelAdmin):
+    list_display = [
+        'user',
+        'birthdate',
+        'avatar'
+    ]
+
+
 admin.site.register(Company, CompanyAdminList)
 admin.site.register(Product, ProductAdminList)
+admin.site.register(UserProfile, UserProfileAdminList)
 
 admin.site.site_header = 'REVIRO Admin'
 admin.site.index_title = 'REVIRO Internship Admin Page'

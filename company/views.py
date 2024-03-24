@@ -2,14 +2,19 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import generics, permissions
 
-from company.models import Company, Product
-from company.serializers import CompanySerializer, ProductSerializer
+from company.models import Company, Product, UserProfile
+from company.serializers import (
+    CompanySerializer,
+    ProductSerializer,
+    UserProfileSerializer,
+    UserRegisterSerializer,
+)
 
 
 class CompanyListCreateView(generics.ListCreateAPIView):
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
 
@@ -44,7 +49,7 @@ class CompanyListCreateView(generics.ListCreateAPIView):
 class CompanyRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CompanySerializer
     queryset = Company.objects.all()
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_url_kwarg = 'company_id'
 
     @extend_schema(
@@ -89,7 +94,7 @@ class CompanyRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 class ProductListCreateView(generics.ListCreateAPIView):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_url_kwarg = 'company_id'
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['name']
@@ -128,7 +133,7 @@ class ProductListCreateView(generics.ListCreateAPIView):
 class ProductRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()  # filter(company='company_id')
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_url_kwarg = 'product_id'
 
     @extend_schema(
@@ -164,3 +169,12 @@ class ProductRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     )
     def delete(self, request, *args, **kwargs):
         return super().delete(request, *args, **kwargs)
+
+
+class UserProfileRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserProfileSerializer
+    queryset = UserProfile.objects.all()
+
+
+class UserRegisterView(generics.CreateAPIView):
+    serializer_class = UserRegisterSerializer
