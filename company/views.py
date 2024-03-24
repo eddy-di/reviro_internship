@@ -14,7 +14,7 @@ class CompanyListCreateView(generics.ListCreateAPIView):
     filterset_fields = ['name']
 
     @extend_schema(
-        summary='Gets all companies.',
+        summary='Get companies.',
         description='Allows to `GET` a list of all companies in database, paginated to 10 instances per page.',
         tags=['Companies'],
         operation_id='company_list',
@@ -31,7 +31,7 @@ class CompanyListCreateView(generics.ListCreateAPIView):
         return super().get(request, *args, **kwargs)
 
     @extend_schema(
-        summary='Creates new company.',
+        summary='Create company.',
         description='Allows to `POST` a new company.',
         request=CompanySerializer,
         tags=['Companies'],
@@ -57,7 +57,7 @@ class CompanyRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return super().get(request, *args, **kwargs)
 
     @extend_schema(
-        summary='Partially updates company.',
+        summary='Patch company.',
         description='Allows to `PATCH` a company.',
         request=CompanySerializer,
         tags=['Companies'],
@@ -67,7 +67,7 @@ class CompanyRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return super().patch(request, *args, **kwargs)
 
     @extend_schema(
-        summary='Updates company.',
+        summary='Update company.',
         description='Allows to `PUT` a company.',
         request=CompanySerializer,
         tags=['Companies'],
@@ -77,7 +77,7 @@ class CompanyRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return super().put(request, *args, **kwargs)
 
     @extend_schema(
-        summary='Deletes company.',
+        summary='Delete company.',
         description='Allows to `DELETE` a company.',
         tags=['Companies'],
         operation_id='company_destroy'
@@ -100,7 +100,7 @@ class ProductListCreateView(generics.ListCreateAPIView):
         return queryset
 
     @extend_schema(
-        summary='Gets all products.',
+        summary='Get products.',
         description='Allows to `GET` all products related to `company_id` and paginates 10 instances per page.',
         tags=['Products'],
         parameters=[
@@ -116,7 +116,7 @@ class ProductListCreateView(generics.ListCreateAPIView):
         return super().get(request, *args, **kwargs)
 
     @extend_schema(
-        summary='Creates new product.',
+        summary='Create product.',
         description='Allows to `POST` a new product.',
         request=ProductSerializer,
         tags=['Products']
@@ -132,7 +132,7 @@ class ProductRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     lookup_url_kwarg = 'product_id'
 
     @extend_schema(
-        summary='Gets a product.',
+        summary='Get product.',
         description='Allows to `GET` a product.',
         tags=['Products']
     )
@@ -140,7 +140,7 @@ class ProductRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return super().get(request, *args, **kwargs)
 
     @extend_schema(
-        summary='Partially updates product.',
+        summary='Patch product.',
         description='Allows to `PATCH` a product.',
         request=ProductSerializer,
         tags=['Products']
@@ -149,7 +149,7 @@ class ProductRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return super().patch(request, *args, **kwargs)
 
     @extend_schema(
-        summary='Updates a product.',
+        summary='Update product.',
         description='Allows to `PUT` a product.',
         request=ProductSerializer,
         tags=['Products']
@@ -158,7 +158,7 @@ class ProductRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return super().put(request, *args, **kwargs)
 
     @extend_schema(
-        summary='Deletes product.',
+        summary='Delete product.',
         description='Allows to `DELETE` a product.',
         tags=['Products']
     )
