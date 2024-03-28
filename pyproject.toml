@@ -17,6 +17,9 @@ faker = "^24.2.0"
 pytest-django = "^4.8.0"
 pytest-factoryboy = "^2.7.0"
 psycopg2-binary = "^2.9.9"
+django-filter = "^24.1"
+djangorestframework-simplejwt = {extras = ["crypto"], version = "^5.3.1"}
+pillow = "^10.2.0"
 
 
 [build-system]

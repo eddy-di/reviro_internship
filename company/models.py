@@ -1,5 +1,7 @@
+from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from django.db import models
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class Company(models.Model):
@@ -63,3 +65,20 @@ class Product(models.Model):
     )
     quantity = models.IntegerField(default=0)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+
+def upload_to(instance, filename):
+    return f'avatars/{filename}'
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    birthdate = models.DateField(null=True, blank=True)
+    avatar = models.ImageField(upload_to=upload_to, blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username
+
+    def tokens(self):
+        refresh = RefreshToken.for_user(self)
+        return {'refresh': str(refresh), 'access': str(refresh.access_token)}
