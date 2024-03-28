@@ -1,11 +1,13 @@
 import pytest
 from pytest_factoryboy import register
 from rest_framework.test import APIClient
+from rest_framework_simplejwt.tokens import RefreshToken
 
-from tests.factories import CompanyFactory, ProductFactory
+from tests.factories import CompanyFactory, ProductFactory, UserFactory
 
 register(CompanyFactory)
 register(ProductFactory)
+register(UserFactory)
 
 
 @pytest.fixture
@@ -67,3 +69,22 @@ def product_create_data_dict() -> dict:
         'company': None,
     }
     return result
+
+
+@pytest.fixture
+def create_user_from_factory(db) -> UserFactory:
+    return UserFactory()
+
+
+@pytest.fixture
+def authenticated_api_client(create_user_from_factory) -> APIClient:
+    """
+    Fixture authenticates created user that is created under its hood.
+    Returns authorized APIClient instance.
+    """
+    user = create_user_from_factory
+    client = APIClient()
+    refresh = RefreshToken.for_user(user)
+    client.credentials(HTTP_AUTHORIZATION=f'Bearer {refresh.access_token}')
+
+    return client

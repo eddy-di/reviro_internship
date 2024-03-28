@@ -35,12 +35,32 @@ def test_get_company_list_api_with_companies(
 
 
 @pytest.mark.django_db
-def test_post_company_create_api(
+def test_post_company_create_api_unauth_client(
     api_client,
     company_create_data_dict
 ):
     # given unauthorized client and dict data for example company
     client = api_client
+    company_post_data = company_create_data_dict
+    # when creating company
+    url = reverse('companies')
+    response = client.post(
+        url,
+        data=json.dumps(company_post_data),
+        content_type='application/json'
+    )
+    # then expecting to get code 401 and detail
+    assert response.status_code == 401
+    assert response.data['detail'] == 'Authentication credentials were not provided.'
+
+
+@pytest.mark.django_db
+def test_post_company_create_api(
+    authenticated_api_client,
+    company_create_data_dict
+):
+    # given unauthorized client and dict data for example company
+    client = authenticated_api_client
     company_post_data = company_create_data_dict
     # when creating company
     url = reverse('companies')
@@ -112,12 +132,43 @@ def test_get_company_specific_api_for_existent_company(
 
 
 @pytest.mark.django_db
-def test_patch_company_specific_api(
+def test_patch_company_specific_api_unauth_client(
     api_client,
     create_num_of_companies_from_factories_without_products
 ):
     # given unauthed client and company
     client = api_client
+    company = create_num_of_companies_from_factories_without_products(1)[0]
+    # when client is willing to patch existing company details
+    patch_data = {
+        'name': 'patched_name',
+        'description': 'patched description of the company',
+        'schedule_start': '08:00:00',
+        'schedule_end': '00:00:00'
+    }
+    url = reverse(
+        'company_details',
+        kwargs={
+            'company_id': company.id
+        }
+    )
+    response = client.patch(
+        url,
+        data=json.dumps(patch_data),
+        content_type='application/json'
+    )
+    # then expecting to get status code 200 and pathed data
+    assert response.status_code == 401
+    assert response.data['detail'] == 'Authentication credentials were not provided.'
+
+
+@pytest.mark.django_db
+def test_patch_company_specific_api(
+    authenticated_api_client,
+    create_num_of_companies_from_factories_without_products
+):
+    # given unauthed client and company
+    client = authenticated_api_client
     company = create_num_of_companies_from_factories_without_products(1)[0]
     # when client is willing to patch existing company details
     patch_data = {
@@ -146,13 +197,40 @@ def test_patch_company_specific_api(
 
 
 @pytest.mark.django_db
-def test_put_company_specific_api(
+def test_put_company_specific_api_unauth_client(
     api_client,
     create_num_of_companies_from_factories_without_products,
     company_create_data_dict
 ):
     # given unauthed client and company
     client = api_client
+    company = create_num_of_companies_from_factories_without_products(1)[0]
+    capito_put_data = company_create_data_dict
+    # when client is willing to put existing company details with other company details
+    url = reverse(
+        'company_details',
+        kwargs={
+            'company_id': company.id
+        }
+    )
+    response = client.put(
+        url,
+        data=json.dumps(capito_put_data),
+        content_type='application/json'
+    )
+    # then expecting to get status code 401 and detail
+    assert response.status_code == 401
+    assert response.data['detail'] == 'Authentication credentials were not provided.'
+
+
+@pytest.mark.django_db
+def test_put_company_specific_api(
+    authenticated_api_client,
+    create_num_of_companies_from_factories_without_products,
+    company_create_data_dict
+):
+    # given unauthed client and company
+    client = authenticated_api_client
     company = create_num_of_companies_from_factories_without_products(1)[0]
     capito_put_data = company_create_data_dict
     # when client is willing to put existing company details with other company details
@@ -181,12 +259,33 @@ def test_put_company_specific_api(
 
 
 @pytest.mark.django_db
-def test_delete_company_specific_api(
+def test_delete_company_specific_api_unauth_client(
     api_client,
     create_num_of_companies_from_factories_without_products
 ):
     # given unauthed client and company
     client = api_client
+    company = create_num_of_companies_from_factories_without_products(1)[0]
+    # when trying to delete existing company
+    url = reverse(
+        'company_details',
+        kwargs={
+            'company_id': company.id
+        }
+    )
+    response = client.delete(url)
+    # then expecting to get status code 401 and detail
+    assert response.status_code == 401
+    assert response.data['detail'] == 'Authentication credentials were not provided.'
+
+
+@pytest.mark.django_db
+def test_delete_company_specific_api(
+    authenticated_api_client,
+    create_num_of_companies_from_factories_without_products
+):
+    # given unauthed client and company
+    client = authenticated_api_client
     company = create_num_of_companies_from_factories_without_products(1)[0]
     # when trying to delete existing company
     url = reverse(

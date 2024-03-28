@@ -70,13 +70,36 @@ def test_get_products_list_with_one_company_and_many_products(
 
 
 @pytest.mark.django_db
-def test_post_product_list_api(
+def test_post_product_list_api_unauth_client(
     api_client,
     create_num_of_companies_from_factories_without_products,
     product_create_data_dict
 ):
     # given unauthed client and
     client = api_client
+    company = create_num_of_companies_from_factories_without_products(1)[0]
+    product_post_data = product_create_data_dict
+    product_post_data['company'] = company.id
+    # when accessing api to create product
+    url = reverse('products', kwargs={'company_id': company.id})
+    response = client.post(
+        url,
+        data=json.dumps(product_post_data),
+        content_type='application/json'
+    )
+    # then expecting to get status code 401 and detail
+    assert response.status_code == 401
+    assert response.data['detail'] == 'Authentication credentials were not provided.'
+
+
+@pytest.mark.django_db
+def test_post_product_list_api(
+    authenticated_api_client,
+    create_num_of_companies_from_factories_without_products,
+    product_create_data_dict
+):
+    # given unauthed client and
+    client = authenticated_api_client
     company = create_num_of_companies_from_factories_without_products(1)[0]
     product_post_data = product_create_data_dict
     product_post_data['company'] = company.id
@@ -126,12 +149,42 @@ def test_get_specific_product(
 
 
 @pytest.mark.django_db
-def test_patch_specific_product(
+def test_patch_specific_product_unauth_client(
     api_client,
     create_company_from_factory_with_products
 ):
     # given unauthed client and
     client = api_client
+    product = create_company_from_factory_with_products(1)[0]
+    patch_data = {
+        'name': 'Patched name',
+        'description': 'Patched description'
+    }
+    # when accessing api
+    url = reverse(
+        'product_details',
+        kwargs={
+            'company_id': product.company.id,
+            'product_id': product.id
+        }
+    )
+    response = client.patch(
+        url,
+        data=json.dumps(patch_data),
+        content_type='application/json'
+    )
+    # then expecting to get status code 401 and detail
+    assert response.status_code == 401
+    assert response.data['detail'] == 'Authentication credentials were not provided.'
+
+
+@pytest.mark.django_db
+def test_patch_specific_product(
+    authenticated_api_client,
+    create_company_from_factory_with_products
+):
+    # given unauthed client and
+    client = authenticated_api_client
     product = create_company_from_factory_with_products(1)[0]
     patch_data = {
         'name': 'Patched name',
@@ -161,12 +214,45 @@ def test_patch_specific_product(
 
 
 @pytest.mark.django_db
-def test_put_specific_product(
+def test_put_specific_product_unauth_client(
     api_client,
     create_company_from_factory_with_products
 ):
     # given unauthed client and
     client = api_client
+    product = create_company_from_factory_with_products(1)[0]
+    put_data = {
+        'name': 'Update PUT name',
+        'description': 'Update PUT description',
+        'price': '333.33',
+        'discount': 0,
+        'quantity': 10
+    }
+    # when accessing api
+    url = reverse(
+        'product_details',
+        kwargs={
+            'company_id': product.company.id,
+            'product_id': product.id
+        }
+    )
+    response = client.patch(
+        url,
+        data=json.dumps(put_data),
+        content_type='application/json'
+    )
+    # then expecting to get status code 401 and detail
+    assert response.status_code == 401
+    assert response.data['detail'] == 'Authentication credentials were not provided.'
+
+
+@pytest.mark.django_db
+def test_put_specific_product(
+    authenticated_api_client,
+    create_company_from_factory_with_products
+):
+    # given unauthed client and
+    client = authenticated_api_client
     product = create_company_from_factory_with_products(1)[0]
     put_data = {
         'name': 'Update PUT name',
@@ -198,12 +284,34 @@ def test_put_specific_product(
 
 
 @pytest.mark.django_db
-def test_delete_specific_product(
+def test_delete_specific_product_unauth_client(
     api_client,
     create_company_from_factory_with_products
 ):
     # given unauthed client and
     client = api_client
+    product = create_company_from_factory_with_products(1)[0]
+    # when accessing api
+    url = reverse(
+        'product_details',
+        kwargs={
+            'company_id': product.company.id,
+            'product_id': product.id
+        }
+    )
+    response = client.delete(url)
+    # then expecting to get status code 401 and detail
+    assert response.status_code == 401
+    assert response.data['detail'] == 'Authentication credentials were not provided.'
+
+
+@pytest.mark.django_db
+def test_delete_specific_product(
+    authenticated_api_client,
+    create_company_from_factory_with_products
+):
+    # given unauthed client and
+    client = authenticated_api_client
     product = create_company_from_factory_with_products(1)[0]
     # when accessing api
     url = reverse(
